@@ -6,7 +6,7 @@
 ***********************************/
 
 // Distance between origin and 'crepe' center
-#define DIST_OC         270
+#define DIST_OC         280
 // Distance of the arm
 #define DIST_L          220
 // Gear ratio
@@ -53,6 +53,6 @@
 // Distance between two points of the path in mm
 // This step is used during path interpolation
 // to make the path linear
-#define PATH_DIST       3
+#define PATH_DIST       2
 
 #endif //_CONF_H_
