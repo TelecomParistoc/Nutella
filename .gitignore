@@ -1,5 +1,7 @@
 *.o
 nutella
+stop_pump
 *.pro
 *.user
+*.format
 gui/build*
