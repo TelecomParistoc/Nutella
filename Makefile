@@ -10,11 +10,12 @@ SRCS = src/main.c \
        src/pump.c
 OBJS = $(SRCS:%.c=%.o)
 OUT = nutella
+IN_FILE = star5.txt
 
 .PHONY: clean run db format stop gui
 
 run: $(OUT)
-	./$< star5.txt 320
+	./$< $(IN_FILE) 320
 
 format: $(SRCS:%.c=%.format)
 
@@ -26,7 +27,7 @@ $(OUT): $(OBJS)
 	$(CC) $(CFLAGS) $(DB) -o $@ $^ $(LDLIBS)
 
 db:
-	make $(OUT) CFLAGS="$(CFLAGS) -D DEBUG=1" LDLIBS="-lm"
+	make $(OUT) CFLAGS="$(CFLAGS) -D DEBUG=1" LDLIBS="$(LDLIBS_DB)"
 	make run
 
 stop_pump: $(OBJS:src/main.o=) src/stop_pump.o
@@ -37,6 +38,9 @@ stop: stop_pump
 
 gui:
 	gui/build-nutella_draw-Desktop-Debug/nutella_draw
+
+%:
+	make run IN_FILE="$@.txt"
 
 clean:
 	rm -f $(OBJS)
