@@ -1,12 +1,13 @@
 #include "ax12.h"
 #include <math.h>
 #include <stdio.h>
-#include <wiringPi.h>
 #include "conf.h"
 #include "coordinate.h"
 #include "path.h"
+#include "pump.h"
 #ifndef DEBUG
-#include "AX12/ax12.h"
+    #include "AX12/ax12.h"
+    #include <wiringPi.h>
 #endif
 
 static volatile int lock_1 = 1;
@@ -75,6 +76,17 @@ void move(point_t angles)
 #endif
 }
 
+/* Wait a user entry to continue
+** This funtion is used to wait for the Nutella flow
+*/
+void wait_nutella(void)
+{
+    // Wait for the Nutella to flow
+    printf("Press Any Key when Nutella is flowing\n");
+    start_pump();
+    getchar();
+}
+
 /* Move from a point to another using linear interpolation
 ** [in]  p1: start point
 ** [in]  p2: end point
@@ -105,6 +117,8 @@ void init_ax12(void)
 
 void follow_path(path_t* path)
 {
+    move(xy2recheable_angles(path->points[0]));
+    wait_nutella();
     for(int i = 1; i < path->nb_points; i++)
         smart_move(path->points[i - 1], path->points[i]);
 }

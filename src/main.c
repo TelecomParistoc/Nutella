@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
     printf("The printing head must be at the 'crepe' center\n");
     printf("Press Any Key to Continue\n");
     getchar();
-    start_pump();
+    
     follow_path(&path);
     stop_pump();
 

@@ -14,7 +14,7 @@ OUT = nutella
 .PHONY: clean run db format gui
 
 run: $(OUT)
-	./$< star5.txt 320
+	./$< test.txt 320
 
 format: $(SRCS:%.c=%.format)
 
@@ -29,9 +29,13 @@ db:
 	make $(OUT) CFLAGS="$(CFLAGS) -D DEBUG=1" LDLIBS="-lm"
 	./$(OUT) star5.txt 320
 
+stop_pump: $(OBJS:src/main.o=) src/stop_pump.o
+	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
+	./stop_pump
 gui:
 	gui/build-nutella_draw-Desktop-Debug/nutella_draw
 
 clean:
 	rm -f $(OBJS)
 	rm -f $(OUT)
+	rm -f src/stop_pump
