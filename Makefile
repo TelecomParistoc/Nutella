@@ -1,12 +1,13 @@
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra -Wno-unused-function -std=c99 -O2
-LDLIBS = -lm -lAX12
+LDLIBS = -lm -lAX12 -lwiringPi
 LDLIBS_DB = -lm
 SRCS = src/main.c \
 	   src/coordinate.c \
-       src/parse.c \
+           src/parse.c \
 	   src/path.c \
-	   src/ax12.c
+	   src/ax12.c \
+           src/pump.c
 OBJS = $(SRCS:%.c=%.o)
 OUT = nutella
 

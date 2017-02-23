@@ -23,7 +23,7 @@
 // Second AX12 id
 #define AX12_ID_2       135
 // Torque (in %)
-#define AX12_TORQUE     50
+#define AX12_TORQUE     60
 // Second AX12 offset
 #define AX12_OFFSET_A   0
 #define AX12_OFFSET_B   47.16
@@ -32,6 +32,17 @@
 #define AX12_MAX_A      150
 #define AX12_MIN_B      -20
 #define AX12_MAX_B      105
+// Number of try for AX12 control
+#define AX12_NB_TRY     4
+
+
+/***********************************
+*************** PATH ***************
+***********************************/
+
+// Pin where pump is connected
+// According to "gpio readall" tab
+#define PUMP_PIN       28
 
 /***********************************
 *************** PATH ***************

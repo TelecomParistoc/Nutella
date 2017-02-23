@@ -1,6 +1,7 @@
 #include "ax12.h"
 #include <math.h>
 #include <stdio.h>
+#include <wiringPi.h>
 #include "conf.h"
 #include "coordinate.h"
 #include "path.h"
@@ -40,7 +41,7 @@ static void handle_error(int ax12_id, int err)
         case -3: printf("Target and answer ID mismatch\n"); break;
         case -4: printf("Timeout\n"); break;
         case -5: printf("Callback buffer is full\n"); break;
-        default: printf("Unexpected error\n");
+        default: printf("Unexpected error: %d\n", err);
     }
 }
 
@@ -62,10 +63,15 @@ void move(point_t angles)
 #ifndef DEBUG
     lock_1 = 1;
     lock_2 = 1;
-    handle_error(AX12_ID_1, AX12move(AX12_ID_1, a, move_callback_1));
-    handle_error(AX12_ID_2, AX12move(AX12_ID_2, b, move_callback_2));
-    while(lock_1 || lock_2)
-        ;
+    int err = 1;
+    for(int i = 0; i < AX12_NB_TRY && err != 0; i++)
+    	err = AX12move(AX12_ID_1, a, move_callback_1);
+    handle_error(AX12_ID_1, err);
+    err = 1;
+    for(int i = 0; i < AX12_NB_TRY && err != 0; i++)
+    	err = AX12move(AX12_ID_2, b, move_callback_2);
+    handle_error(AX12_ID_2, err);
+    while(lock_1 || lock_2);
 #endif
 }
 
@@ -102,3 +108,4 @@ void follow_path(path_t* path)
     for(int i = 1; i < path->nb_points; i++)
         smart_move(path->points[i - 1], path->points[i]);
 }
+

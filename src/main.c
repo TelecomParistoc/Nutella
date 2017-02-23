@@ -4,6 +4,7 @@
 #include "coordinate.h"
 #include "parse.h"
 #include "path.h"
+#include "pump.h"
 
 int main(int argc, char* argv[])
 {
@@ -15,8 +16,10 @@ int main(int argc, char* argv[])
     		\t  filename: file wich contain points coordinates (ex: start5.txt)\n\
     		\t  diameter: diameter of the 'crepe'\n");
     }
-    // Init AX12
+    // Init
     init_ax12();
+    if (init_pump())
+        return 1;
     // Extract cooridnates from the input file
     path_t path     = parse(argv[1]);
     int    diameter = atoi(argv[2]);
@@ -28,7 +31,9 @@ int main(int argc, char* argv[])
     printf("The printing head must be at the 'crepe' center\n");
     printf("Press Any Key to Continue\n");
     getchar();
+    start_pump();
     follow_path(&path);
+    stop_pump();
 
     return 0;
 }
