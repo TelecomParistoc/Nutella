@@ -72,7 +72,7 @@ void move(point_t angles)
     for(int i = 0; i < AX12_NB_TRY && err != 0; i++)
     	err = AX12move(AX12_ID_2, b, move_callback_2);
     handle_error(AX12_ID_2, err);
-    while(lock_1 || lock_2);
+    //while(lock_1 || lock_2);
 #endif
 }
 

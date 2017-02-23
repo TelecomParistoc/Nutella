@@ -31,6 +31,8 @@ db:
 
 stop_pump: $(OBJS:src/main.o=) src/stop_pump.o
 	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
+
+stop: clean stop_pump
 	./stop_pump
 gui:
 	gui/build-nutella_draw-Desktop-Debug/nutella_draw
