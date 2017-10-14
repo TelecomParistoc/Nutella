@@ -3,16 +3,11 @@
 
 #include "path.h"
 
-/* Resize and rescale a group of points to fit them in a circle
-** [in]  path: group of points to resize
-** [in]  diamter: diameter of the container circle
+/* Return angles positions of Nutella printer motors
+** to reach each points of the path
+** [in]  path: points to reach
+** [in]  diameter: diameter of the 'crepe'
 */
-void resize_coordinates(path_t * path, int diameter);
-
-/* Change coordinates from cartesian to polar
-** [in]  point: cartesian coordinates
-** [out] polar coordinates
-*/
-point_t xy2rt(point_t point);
+void compute_path(path_t * path, int diameter);
 
 #endif //_COORDINATE_H_

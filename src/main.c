@@ -6,23 +6,24 @@
 
 int main(int argc, char * argv[])
 {
+    printf("Starting Nutella printer program\n\n");
     if(argc != 3) {
         printf("[ERROR][MAIN] Unexpected number of parameters\n\
             \tUsage: ./nutella <filename> <diameter>\n\
     		\t  filename: file wich contain points coordinates (ex: start5.txt)\n\
     		\t  diameter: diameter of the 'crepe'\n");
     }
+    // Extract cooridnates from the input file
     path_t path = parse(argv[1]);
     int diameter = atoi(argv[2]);
-#ifdef DEBUG
-    printf("[DEBUG][PARSE] path after parsing:\n");
-    display_path(&path);
-#endif
-    resize_coordinates(&path, diameter);
-#ifdef DEBUG
-    printf("[DEBUG][RESIZE] path after resizing and scaling:\n");
-    display_path(&path);
-#endif
+    // Convert coordinates to motor angles
+    compute_path(&path, diameter);
+    // Go to center position ('crepe' center)
+    //mote_to(0, 0);
+    // Wait for user to continue
+    printf("The printing head must be at the 'crepe' center\n");
+    printf("Press Any Key to Continue\n");
+    getchar();
 
     return 0;
 }

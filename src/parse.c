@@ -49,9 +49,9 @@ path_t      parse(const char * filename)
     while((c = fgetc(file)) != EOF) {
         if(isFigure(c)) {
             if(mode)
-                posX = posX * 10 + c - '0';
-            else
                 posY = posY * 10 + c - '0';
+            else
+                posX = posX * 10 + c - '0';
         }
         else if(c == '\n') {
             mode = 0;
