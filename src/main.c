@@ -19,8 +19,9 @@ int main(int argc, char * argv[])
     // Convert coordinates to motor angles
     compute_path(&path, diameter);
     // Go to center position ('crepe' center)
-    //mote_to(0, 0);
+    //mote_to(center_pos());
     // Wait for user to continue
+    center_pos();
     printf("The printing head must be at the 'crepe' center\n");
     printf("Press Any Key to Continue\n");
     getchar();

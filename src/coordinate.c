@@ -61,8 +61,6 @@ static void resize_coordinates(path_t * path, int diameter)
     c.y /= -path->nb_points;
     // Move all point to have (0,0) as center
     move_path(path, &c);
-    printf("\n");
-    display_path(path);
     // Get min radius (r) of C
     int r = dist2(path->points[0]);
     int dist;
@@ -86,8 +84,6 @@ static void xy2angles_path(path_t * path)
     // Get coordinates as polar
     for(int i = 0; i < path->nb_points; i++)
         path->points[i] = xy2rt(path->points[i]);
-    printf("[DEBUG][]\n");
-    display_path(path);
     // Get angles of the motors to reach each points
     float b;
     for(int i = 0; i < path->nb_points; i++) {
@@ -95,18 +91,23 @@ static void xy2angles_path(path_t * path)
         path->points[i].x = GEAR_RATIO * (path->points[i].y - b / 2);
         path->points[i].y = b;
     }
-    // Center angles
-    point_t offset = {
-        -motor_offset.x,
-        -motor_offset.y
-    };
-    move_path(path, &offset);
-    // Limitvalue to ]-pi, pi]
+    // Get center angles
+    float min_a = path->points[0].x;
+    float max_a = min_a;
+    float min_b = path->points[0].y;
+    float max_b = min_b;
     for(int i = 0; i < path->nb_points; i++) {
-        while(path->points[i].x > M_PI) path->points[i].x -= 2 * M_PI;
-        while(path->points[i].x <= -M_PI) path->points[i].x += 2 * M_PI;
-        while(path->points[i].y > M_PI) path->points[i].y -= 2 * M_PI;
-        while(path->points[i].y <= -M_PI) path->points[i].y += 2 * M_PI;
+        if(path->points[i].x > max_a) max_a = path->points[i].x;
+        else if(path->points[i].x < min_a) min_a = path->points[i].x;
+        if(path->points[i].y > max_b) max_b = path->points[i].y;
+        else if(path->points[i].y < min_b) min_b = path->points[i].y;
+    }
+    motor_offset.x = (min_a + max_a) / 2;
+    motor_offset.y = (min_b + max_b) / 2;
+    // Center angles
+    for(int i = 0; i < path->nb_points; i++) {
+        path->points[i].x -= motor_offset.x;
+        path->points[i].y -= motor_offset.y;
     }
     // Change to deg instead of rad
     for(int i = 0; i < path->nb_points; i++) {
@@ -118,8 +119,6 @@ static void xy2angles_path(path_t * path)
 void compute_path(path_t * path, int diameter)
 {
     // Set center offset angles
-    motor_offset.x = M_PI / 2 - acos(DIST_OC / 2.0 / DIST_L);
-    motor_offset.y = 2 * acos(DIST_OC / 2.0 / DIST_L);
     #ifdef DEBUG
         printf("[DEBUG][PARSE] path after parsing:\n");
         display_path(path);
@@ -136,4 +135,16 @@ void compute_path(path_t * path, int diameter)
         printf("\n[DEBUG][ANGLE] path with coordinates of motors:\n");
         display_path(path);
     #endif
+}
+
+point_t center_pos(void)
+{
+    point_t center = {
+        (M_PI / 2 - acos(DIST_OC / 2.0 / DIST_L) - motor_offset.x) * 180 / M_PI,
+        (motor_offset.y = 2 * acos(DIST_OC / 2.0 / DIST_L) - motor_offset.y) * 180 / M_PI
+    };
+#ifdef DEBUG
+    printf("\n[DEBUG][CENTER] center point: [%f, %f]\n", center.x, center.y);
+#endif
+    return center;
 }
