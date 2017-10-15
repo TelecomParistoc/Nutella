@@ -1,10 +1,6 @@
 #ifndef _CONF_H_
 #define _CONF_H_
 
-// Debug enabling
-// Comment this line to disable debug
-#define DEBUG           1
-
 // Distance between origin and 'crepe' center
 #define DIST_OC         260
 // Distance of the arm
@@ -19,11 +15,9 @@
 // Second AX12 id
 #define AX12_ID_2       135
 // Torque (in %)
-#define AX12_TORQUE     50
-// First AX12 offset
+#define AX12_TORQUE     30
+// Second AX12 offset
 #define AX12_OFFSET_B   47.16
-// First AX12 offset
-#define AX12_OFFSET_A   70.73
 // Min and max positions of AX12s
 #define AX12_MIN_A      -150
 #define AX12_MAX_A      150

@@ -16,10 +16,10 @@ run: $(OUT)
 	./$< star5.txt 320
 
 $(OUT): $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
+	$(CC) $(CFLAGS) $(DB) -o $@ $^ $(LDLIBS)
 
-db: $(OBJS)
-	$(CC) $(CFLAGS) -o $(OUT) $^ $(LDLIBS_DB)
+db:
+	make $(OUT) CFLAGS="$(CFLAGS) -D DEBUG=1" LDLIBS="-lm"
 	./$(OUT) star5.txt 320
 
 clean:

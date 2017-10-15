@@ -59,6 +59,9 @@ static void resize_coordinates(path_t * path, int diameter)
     }
     c.x /= -path->nb_points;
     c.y /= -path->nb_points;
+#ifdef DEBUG
+    printf("\n[DEBUG][CENTER] Center: [%f,%f]\n", c.x, c.y);
+#endif
     // Move all point to have (0,0) as center
     move_path(path, &c);
     // Get min radius (r) of C
@@ -81,9 +84,21 @@ static void resize_coordinates(path_t * path, int diameter)
 */
 static void xy2angles_path(path_t * path)
 {
+#ifdef DEBUG
+    printf("\n[DEBUG][SHIT] path real pos:\n");
+        display_path(path);
+#endif
     // Get coordinates as polar
     for(int i = 0; i < path->nb_points; i++)
         path->points[i] = xy2rt(path->points[i]);
+#ifdef DEBUG
+    for(int i = 0; i < path->nb_points; i++)
+        path->points[i].y *= 180 / M_PI;
+    printf("\n[DEBUG][POLAR] path in polar:\n");
+    display_path(path);
+    for(int i = 0; i < path->nb_points; i++)
+        path->points[i].y *= M_PI / 180;
+#endif
     // Get angles of the motors to reach each points
     float b;
     for(int i = 0; i < path->nb_points; i++) {
