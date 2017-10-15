@@ -1,10 +1,11 @@
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra -std=c99
+CFLAGS = -Wall -Werror -Wextra -Wno-unused-function -std=c99
 LDLIBS = -lm
 SRCS = src/main.c \
 	   src/coordinate.c \
        src/parse.c \
-	   src/path.c
+	   src/path.c \
+	   src/ax12.c
 OBJS = $(SRCS:%.c=%.o)
 OUT = nutella
 

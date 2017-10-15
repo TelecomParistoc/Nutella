@@ -119,22 +119,22 @@ static void xy2angles_path(path_t * path)
 void compute_path(path_t * path, int diameter)
 {
     // Set center offset angles
-    #ifdef DEBUG
-        printf("[DEBUG][PARSE] path after parsing:\n");
-        display_path(path);
-    #endif
-        resize_coordinates(path, diameter);
-    #ifdef DEBUG
-        printf("\n[DEBUG][RESIZE] path after scaling and centering:\n");
-        display_path(path);
-    #endif
-        point_t c = {0, DIST_OC};
-        move_path(path, &c);
-        xy2angles_path(path);
-    #ifdef DEBUG
-        printf("\n[DEBUG][ANGLE] path with coordinates of motors:\n");
-        display_path(path);
-    #endif
+#ifdef DEBUG
+    printf("[DEBUG][PARSE] path after parsing:\n");
+    display_path(path);
+#endif
+    resize_coordinates(path, diameter);
+#ifdef DEBUG
+    printf("\n[DEBUG][RESIZE] path after scaling and centering:\n");
+    display_path(path);
+#endif
+    point_t c = {0, DIST_OC};
+    move_path(path, &c);
+    xy2angles_path(path);
+#ifdef DEBUG
+    printf("\n[DEBUG][ANGLE] path with coordinates of motors:\n");
+    display_path(path);
+#endif
 }
 
 point_t center_pos(void)
