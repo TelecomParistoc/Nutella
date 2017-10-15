@@ -8,16 +8,24 @@
 static int lock_1 = 1;
 static int lock_2 = 1;
 
-static void move_callback_1()
+/* First AX12 Move callback
+*/
+static void move_callback_1(void)
 {
     lock_1 = 0;
 }
 
-static void move_callback_2()
+/* Second AX12 Move callback
+*/
+static void move_callback_2(void)
 {
     lock_2 = 0;
 }
 
+/* Print error message if an error occured
+** [in]  ax12_id: ID of the source AX12
+** [in]  err: error code (could be 0 for no error)
+*/
 static void handle_error(int ax12_id, int err)
 {
     if(err == 0)
@@ -33,13 +41,18 @@ static void handle_error(int ax12_id, int err)
     }
 }
 
+/* Move the AX12 to a position
+** This is a blocking function
+** [in]  a: rotation of the first motor
+** [in]  b: rotation of the second motor
+*/
 static void move(float a, float b)
 {
 #ifdef DEBUG
     printf("[DEBUG][MOVE] Go to [%f, %f]\n", a, b);
 #else
     handle_error(AX12_ID_1, AX12move(AX12_ID_1, a, move_callback_1));
-    handle_error(AX12_ID_2, AX12move(AX12_ID_2, b, move_callback_2));
+    handle_error(AX12_ID_2, AX12move(AX12_ID_2, b - AX12_OFFSET_B, move_callback_2));
 	while(lock_1 || lock_2);
 #endif
 }
@@ -58,4 +71,10 @@ void init_ax12(void)
 void move_to(point_t pos)
 {
     move(pos.x, pos.y);
+}
+
+void follow_path(path_t * path)
+{
+    for(int i = 0; i < path->nb_points; i++)
+        move(path->points[i].x, path->points[i].y);
 }

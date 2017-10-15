@@ -22,10 +22,10 @@ int main(int argc, char * argv[])
     // Go to center position ('crepe' center)
     move_to(center_pos());
     // Wait for user to continue
-    center_pos();
     printf("The printing head must be at the 'crepe' center\n");
     printf("Press Any Key to Continue\n");
     getchar();
+    follow_path(&path);
 
     return 0;
 }

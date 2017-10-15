@@ -8,7 +8,7 @@
 #endif
 
 // Offset of the motors positions
-static point_t motor_offset;
+static float motor_offset_a;
 
 /* Return the squared distance between a point and the origin
 ** [in]  point to compute
@@ -91,24 +91,17 @@ static void xy2angles_path(path_t * path)
         path->points[i].x = GEAR_RATIO * (path->points[i].y - b / 2);
         path->points[i].y = b;
     }
-    // Get center angles
+    // Get center angles for a
     float min_a = path->points[0].x;
     float max_a = min_a;
-    float min_b = path->points[0].y;
-    float max_b = min_b;
     for(int i = 0; i < path->nb_points; i++) {
         if(path->points[i].x > max_a) max_a = path->points[i].x;
         else if(path->points[i].x < min_a) min_a = path->points[i].x;
-        if(path->points[i].y > max_b) max_b = path->points[i].y;
-        else if(path->points[i].y < min_b) min_b = path->points[i].y;
     }
-    motor_offset.x = (min_a + max_a) / 2;
-    motor_offset.y = (min_b + max_b) / 2;
+    motor_offset_a = (min_a + max_a) / 2;
     // Center angles
-    for(int i = 0; i < path->nb_points; i++) {
-        path->points[i].x -= motor_offset.x;
-        path->points[i].y -= motor_offset.y;
-    }
+    for(int i = 0; i < path->nb_points; i++)
+        path->points[i].x -= motor_offset_a;
     // Change to deg instead of rad
     for(int i = 0; i < path->nb_points; i++) {
         path->points[i].x *= 180 / M_PI;
@@ -140,11 +133,11 @@ void compute_path(path_t * path, int diameter)
 point_t center_pos(void)
 {
     point_t center = {
-        (M_PI / 2 - acos(DIST_OC / 2.0 / DIST_L) - motor_offset.x) * 180 / M_PI,
-        (motor_offset.y = 2 * acos(DIST_OC / 2.0 / DIST_L) - motor_offset.y) * 180 / M_PI
+        ((M_PI / 2 - acos(DIST_OC / 2.0 / DIST_L)) * GEAR_RATIO - motor_offset_a) * 180 / M_PI,
+        (2 * acos(DIST_OC / 2.0 / DIST_L)) * 180 / M_PI
     };
 #ifdef DEBUG
-    printf("\n[DEBUG][CENTER] center point: [%f, %f]\n", center.x, center.y);
+    printf("\n[DEBUG][CENTER] center point: [%f, %f] (offset: [%f, 0])\n", center.x, center.y, motor_offset_a * 180 / M_PI);
 #endif
     return center;
 }

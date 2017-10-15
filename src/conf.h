@@ -20,7 +20,9 @@
 #define AX12_ID_2       135
 // Torque (in %)
 #define AX12_TORQUE     50
-// Min pos AX12 1
-#define AX12_MIN_POS_1
+// First AX12 offset
+#define AX12_OFFSET_B   132.84
+// First AX12 offset
+#define AX12_OFFSET_A   70.73
 
 #endif //_CONF_H_
