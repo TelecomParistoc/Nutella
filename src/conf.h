@@ -24,5 +24,10 @@
 #define AX12_OFFSET_B   132.84
 // First AX12 offset
 #define AX12_OFFSET_A   70.73
+// Min and max positions of AX12s
+#define AX12_MIN_A      -150
+#define AX12_MAX_A      150
+#define AX12_MIN_B      -20
+#define AX12_MAX_B      105
 
 #endif //_CONF_H_
