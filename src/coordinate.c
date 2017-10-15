@@ -137,7 +137,7 @@ point_t center_pos(void)
         (2 * acos(DIST_OC / 2.0 / DIST_L)) * 180 / M_PI
     };
 #ifdef DEBUG
-    printf("\n[DEBUG][CENTER] center point: [%f, %f] (offset: [%f, 0])\n", center.x, center.y, motor_offset_a * 180 / M_PI);
+    printf("\n[DEBUG][CENTER] center point: [%f, %f] (offset: [%f, %f])\n", center.x, center.y, motor_offset_a * 180 / M_PI, AX12_OFFSET_B);
 #endif
     return center;
 }

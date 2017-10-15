@@ -21,7 +21,7 @@
 // Torque (in %)
 #define AX12_TORQUE     50
 // First AX12 offset
-#define AX12_OFFSET_B   132.84
+#define AX12_OFFSET_B   47.16
 // First AX12 offset
 #define AX12_OFFSET_A   70.73
 // Min and max positions of AX12s
