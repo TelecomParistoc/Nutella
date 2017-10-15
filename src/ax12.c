@@ -48,9 +48,10 @@ static void handle_error(int ax12_id, int err)
 */
 static void move(float a, float b)
 {
+    b -= AX12_OFFSET_B;
 #ifdef DEBUG
     printf("[DEBUG][MOVE] Go to [%f, %f]\n", a, b);
-#else
+#endif
     if(a > AX12_MAX_A || a < AX12_MIN_A) {
         printf("[ERROR][MOVE] AX12 1, Unreachable value: %f\n", a);
         return;
@@ -59,8 +60,11 @@ static void move(float a, float b)
         printf("[ERROR][MOVE] AX12 2, Unreachable value: %f\n", b);
         return ;
     }
+#ifndef DEBUG
+    lock_1 = 1;
+    lock_2 = 1;
     handle_error(AX12_ID_1, AX12move(AX12_ID_1, a, move_callback_1));
-    handle_error(AX12_ID_2, AX12move(AX12_ID_2, b - AX12_OFFSET_B, move_callback_2));
+    handle_error(AX12_ID_2, AX12move(AX12_ID_2, b, move_callback_2));
 	while(lock_1 || lock_2);
 #endif
 }
