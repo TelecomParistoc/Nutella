@@ -102,8 +102,8 @@ static void xy2angles_path(path_t * path)
     // Get angles of the motors to reach each points
     float b;
     for(int i = 0; i < path->nb_points; i++) {
-        b = 2 * acos(path->points[i].x / 2.0 / DIST_L);
-        path->points[i].x = GEAR_RATIO * (path->points[i].y - b / 2);
+        b = M_PI - 2 * acos(path->points[i].x / 2.0 / DIST_L);
+        path->points[i].x = GEAR_RATIO * (path->points[i].y - (M_PI - b) / 2);
         path->points[i].y = b;
     }
     // Get center angles for a
@@ -113,7 +113,7 @@ static void xy2angles_path(path_t * path)
         if(path->points[i].x > max_a) max_a = path->points[i].x;
         else if(path->points[i].x < min_a) min_a = path->points[i].x;
     }
-    motor_offset_a = (min_a + max_a) / 2;
+    //motor_offset_a = (min_a + max_a) / 2;
     // Center angles
     for(int i = 0; i < path->nb_points; i++)
         path->points[i].x -= motor_offset_a;
@@ -149,7 +149,7 @@ point_t center_pos(void)
 {
     point_t center = {
         ((M_PI / 2 - acos(DIST_OC / 2.0 / DIST_L)) * GEAR_RATIO - motor_offset_a) * 180 / M_PI,
-        (2 * acos(DIST_OC / 2.0 / DIST_L)) * 180 / M_PI
+        (M_PI - 2 * acos(DIST_OC / 2.0 / DIST_L)) * 180 / M_PI
     };
 #ifdef DEBUG
     printf("\n[DEBUG][CENTER] center point: [%f, %f] (offset: [%f, %f])\n", center.x, center.y, motor_offset_a * 180 / M_PI, AX12_OFFSET_B);

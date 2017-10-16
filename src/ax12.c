@@ -48,7 +48,8 @@ static void handle_error(int ax12_id, int err)
 */
 static void move(float a, float b)
 {
-    b = 180 - b - AX12_OFFSET_B;
+    a -= AX12_OFFSET_A;
+    b -= AX12_OFFSET_B;
 #ifdef DEBUG
     printf("[DEBUG][MOVE] Go to [%f, %f]\n", a, b);
 #endif
