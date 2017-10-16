@@ -17,7 +17,7 @@
 // Torque (in %)
 #define AX12_TORQUE     30
 // Second AX12 offset
-#define AX12_OFFSET_A   270
+#define AX12_OFFSET_A   0
 #define AX12_OFFSET_B   47.16
 // Min and max positions of AX12s
 #define AX12_MIN_A      -150

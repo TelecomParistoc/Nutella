@@ -113,7 +113,7 @@ static void xy2angles_path(path_t * path)
         if(path->points[i].x > max_a) max_a = path->points[i].x;
         else if(path->points[i].x < min_a) min_a = path->points[i].x;
     }
-    //motor_offset_a = (min_a + max_a) / 2;
+    motor_offset_a = (min_a + max_a) / 2;
     // Center angles
     for(int i = 0; i < path->nb_points; i++)
         path->points[i].x -= motor_offset_a;
