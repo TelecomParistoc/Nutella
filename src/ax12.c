@@ -50,16 +50,14 @@ static void move(float a, float b)
 {
     a -= AX12_OFFSET_A;
     b -= AX12_OFFSET_B;
-#ifdef DEBUG
-    printf("[DEBUG][MOVE] Go to [%f, %f]\n", a, b);
-#endif
+    printf("[INFO][MOVE] Go to [%f, %f]\n", a, b);
     if(a > AX12_MAX_A || a < AX12_MIN_A) {
         printf("[ERROR][MOVE] AX12 1, Unreachable value: %f\n", a);
         return;
     }
     if(b > AX12_MAX_B || b < AX12_MIN_B){
         printf("[ERROR][MOVE] AX12 2, Unreachable value: %f\n", b);
-        return ;
+        return;
     }
 #ifndef DEBUG
     lock_1 = 1;
