@@ -103,7 +103,7 @@ static void xy2angles_path(path_t * path)
     float b;
     for(int i = 0; i < path->nb_points; i++) {
         b = M_PI - 2 * acos(path->points[i].x / 2.0 / DIST_L);
-        path->points[i].x = GEAR_RATIO * (path->points[i].y - (M_PI - b) / 2);
+        path->points[i].x = GEAR_RATIO * (path->points[i].y + (M_PI - b) / 2);
         path->points[i].y = b;
     }
     // Get center angles for a
@@ -148,7 +148,7 @@ void compute_path(path_t * path, int diameter)
 point_t center_pos(void)
 {
     point_t center = {
-        ((M_PI / 2 - acos(DIST_OC / 2.0 / DIST_L)) * GEAR_RATIO - motor_offset_a) * 180 / M_PI,
+        ((M_PI / 2 + acos(DIST_OC / 2.0 / DIST_L)) * GEAR_RATIO - motor_offset_a) * 180 / M_PI,
         (M_PI - 2 * acos(DIST_OC / 2.0 / DIST_L)) * 180 / M_PI
     };
 #ifdef DEBUG
