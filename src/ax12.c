@@ -1,8 +1,8 @@
-#include <stdio.h>
 #include "ax12.h"
+#include <stdio.h>
 #include "conf.h"
 #ifndef DEBUG
-    #include "AX12/ax12.h"
+#include "AX12/ax12.h"
 #endif
 
 static int lock_1 = 1;
@@ -31,12 +31,12 @@ static void handle_error(int ax12_id, int err)
     if(err == 0)
         return;
     printf("[ERROR][AX12] (id: %d) AX12move ERROR: (%d) ", ax12_id, err);
-    switch(err){
-        case -1: printf("Serial port not initialized\n");break;
-        case -2: printf("Wrong checksum\n");break;
-        case -3: printf("Target and answer ID mismatch\n");break;
-        case -4: printf("Timeout\n");break;
-        case -5: printf("Callback buffer is full\n");break;
+    switch(err) {
+        case -1: printf("Serial port not initialized\n"); break;
+        case -2: printf("Wrong checksum\n"); break;
+        case -3: printf("Target and answer ID mismatch\n"); break;
+        case -4: printf("Timeout\n"); break;
+        case -5: printf("Callback buffer is full\n"); break;
         default: printf("Unexpected error\n");
     }
 }
@@ -55,7 +55,7 @@ static void move(float a, float b)
         printf("[ERROR][MOVE] AX12 1, Unreachable value: %f\n", a);
         return;
     }
-    if(b > AX12_MAX_B || b < AX12_MIN_B){
+    if(b > AX12_MAX_B || b < AX12_MIN_B) {
         printf("[ERROR][MOVE] AX12 2, Unreachable value: %f\n", b);
         return;
     }
@@ -64,7 +64,8 @@ static void move(float a, float b)
     lock_2 = 1;
     handle_error(AX12_ID_1, AX12move(AX12_ID_1, a, move_callback_1));
     handle_error(AX12_ID_2, AX12move(AX12_ID_2, b, move_callback_2));
-	while(lock_1 || lock_2);
+    while(lock_1 || lock_2)
+        ;
 #endif
 }
 
@@ -84,7 +85,7 @@ void move_to(point_t pos)
     move(pos.x, pos.y);
 }
 
-void follow_path(path_t * path)
+void follow_path(path_t* path)
 {
     for(int i = 0; i < path->nb_points; i++)
         move(path->points[i].x, path->points[i].y);

@@ -1,10 +1,10 @@
+#include "coordinate.h"
 #include <math.h>
 #include <stdio.h>
-#include "coordinate.h"
 #include "conf.h"
 
 #ifndef M_PI
-    #define M_PI 3.14159265358979323846
+#define M_PI 3.14159265358979323846
 #endif
 
 // Offset of the motors positions
@@ -15,7 +15,7 @@ static float motor_offset_a;
 */
 static inline int dist2(point_t point)
 {
-    return(point.x * point.x + point.y * point.y);
+    return (point.x * point.x + point.y * point.y);
 }
 
 /* Change coordinates from cartesian to polar
@@ -26,17 +26,15 @@ static point_t xy2rt(point_t point)
 {
     point_t p = {
         sqrt(dist2(point)),
-        atan2(point.y, point.x)
-    };
+        atan2(point.y, point.x)};
     return p;
-
 }
 
 /* Move a set of points
 ** [in]  path: group of points to move
 ** [in]  offset: vector to move the points
 */
-static void move_path(path_t * path, point_t * offset)
+static void move_path(path_t* path, point_t* offset)
 {
     for(int i = 0; i < path->nb_points; i++) {
         path->points[i].x += offset->x;
@@ -48,7 +46,7 @@ static void move_path(path_t * path, point_t * offset)
 ** [in]  path: group of points to resize
 ** [in]  diamter: diameter of the container circle
 */
-static void resize_coordinates(path_t * path, int diameter)
+static void resize_coordinates(path_t* path, int diameter)
 {
     // C is a circle which contain all points of 'path'
     // Get opposite of the center (c) of C
@@ -82,7 +80,7 @@ static void resize_coordinates(path_t * path, int diameter)
 ** Usable by the Nutella printer
 ** [in]  path: points to compute
 */
-static void xy2angles_path(path_t * path)
+static void xy2angles_path(path_t* path)
 {
     // Get coordinates as polar
     for(int i = 0; i < path->nb_points; i++)
@@ -90,7 +88,7 @@ static void xy2angles_path(path_t * path)
     // Get angles of the motors to reach each points
     float b;
     for(int i = 0; i < path->nb_points; i++) {
-        b = M_PI - 2 * acos(path->points[i].x / 2.0 / DIST_L);
+        b                 = M_PI - 2 * acos(path->points[i].x / 2.0 / DIST_L);
         path->points[i].x = GEAR_RATIO * (path->points[i].y + (M_PI - b) / 2);
         path->points[i].y = b;
     }
@@ -98,8 +96,10 @@ static void xy2angles_path(path_t * path)
     float min_a = path->points[0].x;
     float max_a = min_a;
     for(int i = 0; i < path->nb_points; i++) {
-        if(path->points[i].x > max_a) max_a = path->points[i].x;
-        else if(path->points[i].x < min_a) min_a = path->points[i].x;
+        if(path->points[i].x > max_a)
+            max_a = path->points[i].x;
+        else if(path->points[i].x < min_a)
+            min_a = path->points[i].x;
     }
     motor_offset_a = (min_a + max_a) / 2;
     // Center angles
@@ -112,9 +112,9 @@ static void xy2angles_path(path_t * path)
     }
 }
 
-void compute_path(path_t * path, int diameter)
+void compute_path(path_t* path, int diameter)
 {
-    // Set center offset angles
+// Set center offset angles
 #ifdef DEBUG
     printf("[DEBUG][PARSE] path after parsing:\n");
     display_path(path);
@@ -138,7 +138,6 @@ point_t center_pos(void)
 {
     point_t center = {
         ((M_PI / 2 + acos(DIST_OC / 2.0 / DIST_L)) * GEAR_RATIO - motor_offset_a) * 180 / M_PI,
-        (M_PI - 2 * acos(DIST_OC / 2.0 / DIST_L)) * 180 / M_PI
-    };
+        (M_PI - 2 * acos(DIST_OC / 2.0 / DIST_L)) * 180 / M_PI};
     return center;
 }

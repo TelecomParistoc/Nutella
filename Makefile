@@ -10,12 +10,19 @@ SRCS = src/main.c \
 OBJS = $(SRCS:%.c=%.o)
 OUT = nutella
 
-.PHONY: clean run db
+.PHONY: clean run db format
 
 run: $(OUT)
 	./$< star5.txt 320
 
+format: $(SRCS:%.c=%.format)
+
+%.format: %.c
+	clang-format $^ > $@
+	mv $@ $^
+
 $(OUT): $(OBJS)
+	make format
 	$(CC) $(CFLAGS) $(DB) -o $@ $^ $(LDLIBS)
 
 db:
@@ -25,3 +32,4 @@ db:
 clean:
 	rm -f $(OBJS)
 	rm -f $(OUT)
+
