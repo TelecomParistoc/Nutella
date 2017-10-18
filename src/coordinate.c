@@ -1,6 +1,7 @@
 #include "coordinate.h"
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "conf.h"
 
 #ifndef M_PI
@@ -13,9 +14,19 @@ static float motor_offset_a;
 /* Return the squared distance between a point and the origin
 ** [in]  point to compute
 */
-static inline int dist2(point_t point)
+static inline int norm2(point_t point)
 {
     return (point.x * point.x + point.y * point.y);
+}
+
+/* Return the squared distance between two points
+** [in]  origin point
+** [in]  destination point
+*/
+static int dist2(point_t p1, point_t p2)
+{
+    point_t point = {p2.x - p1.x, p2.y - p1.y};
+    return norm2(point);
 }
 
 /* Change coordinates from cartesian to polar
@@ -25,7 +36,7 @@ static inline int dist2(point_t point)
 static point_t xy2rt(point_t point)
 {
     point_t p = {
-        sqrt(dist2(point)),
+        sqrt(norm2(point)),
         atan2(point.y, point.x)};
     return p;
 }
@@ -63,10 +74,10 @@ static void resize_coordinates(path_t* path, int diameter)
     // Move all point to have (0,0) as center
     move_path(path, &c);
     // Get min radius (r) of C
-    int r = dist2(path->points[0]);
+    int r = norm2(path->points[0]);
     int dist;
     for(int i = 1; i < path->nb_points; i++)
-        if((dist = dist2(path->points[i])) > r)
+        if((dist = norm2(path->points[i])) > r)
             r = dist;
     // Scale points to fit them into C
     float ratio = diameter / 2.0 / sqrt(r);
@@ -140,4 +151,34 @@ point_t center_pos(void)
         ((M_PI / 2 + acos(DIST_OC / 2.0 / DIST_L)) * GEAR_RATIO - motor_offset_a) * 180 / M_PI,
         (M_PI - 2 * acos(DIST_OC / 2.0 / DIST_L)) * 180 / M_PI};
     return center;
+}
+
+/* Get number of points oof a path after linear interpolation
+** [in]  path: path to examinate
+** [in]  step: step in mm between two points
+*/
+static int get_interpolate_nb_points(path_t* path, int step)
+{
+    int nb_points = 0;
+    for(int i = 1; i < path->nb_points; i++)
+        nb_points += (int)(sqrt(dist2(path->points[i], path->points[i - 1])) * 1.0 / step + 0.5);
+    return nb_points;
+}
+
+void add_points(path_t* path, int step)
+{
+    // Allocate new path
+    int      nb_points = get_interpolate_nb_points(path, step);
+    point_t* points    = malloc(sizeof(point_t) * nb_points);
+    // Compute new path
+    printf("[nb points: %d]\n", nb_points);
+    for(int i = 0; i < nb_points; i++) {
+        points[i].x = (i < path->nb_points ? path->points[i].x : 0);
+        points[i].y = (i < path->nb_points ? path->points[i].y : 0);
+    }
+    // Free former path
+    free(path->points);
+    // Update path
+    path->points    = points;
+    path->nb_points = nb_points;
 }

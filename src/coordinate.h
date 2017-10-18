@@ -16,4 +16,10 @@ void compute_path(path_t * path, int diameter);
 */
 point_t center_pos(void);
 
+/* Add linear interpolation points into a path
+** [in]  path: path to upgrade
+** [in]  step: distance between two points
+*/
+void add_points(path_t * path, int step);
+
 #endif //_COORDINATE_H_
