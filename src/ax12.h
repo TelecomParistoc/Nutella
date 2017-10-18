@@ -16,8 +16,10 @@ void init_ax12(void);
 void move_to(point_t pos);
 
 /* Follow a path with the AX12s
+** Between two points, linear interpolation is done to make the path smoother
 ** [in]  path: path to follow
+** [in]  step: linear interpolation step
 */
-void follow_path(path_t * path);
+void follow_path(path_t * path, int step);
 
 #endif // _AX12_H_

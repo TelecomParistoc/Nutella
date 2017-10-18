@@ -22,15 +22,13 @@ int main(int argc, char* argv[])
     int    diameter = atoi(argv[2]);
     // Convert coordinates to motor angles
     compute_path(&path, diameter);
-    // Add points to follow the path smoothly
-    add_points(&path, 2);
     // Go to center position ('crepe' center)
     move_to(center_pos());
     // Wait for user to continue
     printf("The printing head must be at the 'crepe' center\n");
     printf("Press Any Key to Continue\n");
     getchar();
-    follow_path(&path);
+    follow_path(&path, 2);
 
     return 0;
 }
