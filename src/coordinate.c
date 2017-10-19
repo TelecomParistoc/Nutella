@@ -20,12 +20,6 @@ static inline int norm2(point_t point)
     return (point.x * point.x + point.y * point.y);
 }
 
-int dist2(point_t p1, point_t p2)
-{
-    point_t point = {p2.x - p1.x, p2.y - p1.y};
-    return norm2(point);
-}
-
 /* Change coordinates from cartesian to polar
 ** [in]  point: cartesian coordinates
 ** [out] polar coordinates
@@ -98,24 +92,6 @@ static point_t xy2ab(point_t point)
     angles.x = GEAR_RATIO * (angles.y + (M_PI - b) / 2);
     angles.y = b;
     return angles;
-    /*// Get center angles for a
-    float min_a = path->points[0].x;
-    float max_a = min_a;
-    for(int i = 0; i < path->nb_points; i++) {
-        if(path->points[i].x > max_a)
-            max_a = path->points[i].x;
-        else if(path->points[i].x < min_a)
-            min_a = path->points[i].x;
-    }
-    motor_offset_a = (min_a + max_a) / 2;
-    // Center angles
-    for(int i = 0; i < path->nb_points; i++)
-        path->points[i].x -= motor_offset_a;
-    // Change to deg instead of rad
-    for(int i = 0; i < path->nb_points; i++) {
-        path->points[i].x *= 180 / M_PI;
-        path->points[i].y *= 180 / M_PI;
-    }*/
 }
 
 /* Get center of the path

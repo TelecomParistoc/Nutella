@@ -16,11 +16,4 @@ void compute_path(path_t * path, int diameter);
 */
 point_t center_pos(void);
 
-/* Return the squared distance between two points
-** [in]  origin point
-** [in]  destination point
-** [out] squared distance
-*/
-int dist2(point_t p1, point_t p2);
-
 #endif //_COORDINATE_H_
