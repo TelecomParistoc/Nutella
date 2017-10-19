@@ -20,6 +20,11 @@ static inline int norm2(point_t point)
     return (point.x * point.x + point.y * point.y);
 }
 
+float dist(point_t p1, point_t p2)
+{
+    return (sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y)));
+}
+
 /* Change coordinates from cartesian to polar
 ** [in]  point: cartesian coordinates
 ** [out] polar coordinates
@@ -133,21 +138,11 @@ void compute_path(path_t* path, int diameter)
 #ifdef DEBUG
     printf("\n[DEBUG][RESIZE] path after scaling and centering:\n");
     display_path(path);
+    printf("\n");
 #endif
     point_t c = {0, DIST_OC};
     move_path(path, &c);
     motor_offset = compute_motor_center(path);
-    for(int i = 0; i < path->nb_points; i++) {
-        path->points[i] = xy2ab(path->points[i]);
-        path->points[i].x -= motor_offset.x;
-        path->points[i].x *= 180 / M_PI;
-        path->points[i].y *= 180 / M_PI;
-    }
-#ifdef DEBUG
-    printf("\n[DEBUG][ANGLE] path with coordinates of motors:\n");
-    display_path(path);
-    printf("\n");
-#endif
 }
 
 point_t center_pos(void)
@@ -156,4 +151,13 @@ point_t center_pos(void)
         ((M_PI / 2 + acos(DIST_OC / 2.0 / DIST_L)) * GEAR_RATIO - motor_offset.x) * 180 / M_PI,
         (M_PI - 2 * acos(DIST_OC / 2.0 / DIST_L)) * 180 / M_PI};
     return center;
+}
+
+point_t xy2recheable_angles(point_t point)
+{
+    point_t angles = xy2ab(point);
+    angles.x -= motor_offset.x;
+    angles.x *= 180 / M_PI;
+    angles.y *= 180 / M_PI;
+    return angles;
 }

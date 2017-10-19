@@ -10,10 +10,12 @@
 void init_ax12(void);
 
 /* Move the AX12 to a position
-** position must be two angles, one for each motor
-** [in]  pos: angles of the two motors
+** This is a blocking function
+** a: rotation of the first motor
+** b: rotation of the second motor
+** [in]  angles: move to [a,b]
 */
-void move_to(point_t pos);
+void move(point_t angles);
 
 /* Follow a path with the AX12s
 ** Between two points, linear interpolation is done to make the path smoother

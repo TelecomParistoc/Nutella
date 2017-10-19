@@ -1,6 +1,8 @@
 #include "ax12.h"
+#include <math.h>
 #include <stdio.h>
 #include "conf.h"
+#include "coordinate.h"
 #include "path.h"
 #ifndef DEBUG
 #include "AX12/ax12.h"
@@ -42,16 +44,13 @@ static void handle_error(int ax12_id, int err)
     }
 }
 
-/* Move the AX12 to a position
-** This is a blocking function
-** [in]  a: rotation of the first motor
-** [in]  b: rotation of the second motor
-*/
-static void move(float a, float b)
+void move(point_t angles)
 {
-    a -= AX12_OFFSET_A;
-    b -= AX12_OFFSET_B;
+    float a = angles.x - AX12_OFFSET_A;
+    float b = angles.y - AX12_OFFSET_B;
+#ifdef DEBUG
     printf("[INFO][MOVE] Go to [%f, %f]\n", a, b);
+#endif
     if(a > AX12_MAX_A || a < AX12_MIN_A) {
         printf("[ERROR][MOVE] AX12 1, Unreachable value: %f\n", a);
         return;
@@ -77,15 +76,15 @@ static void move(float a, float b)
 */
 static void smart_move(point_t p1, point_t p2, int step)
 {
-    // MUST PASS p1 AND p2  TO CARTESIAN
-    //int d = sqrt(dist2(path->points[i], path->points[i - 1]));
-    //int nb_step = (int)(d * 1.0 / step - 0.5);
-    //point_t vect_step = {(p2.x - p1.x) * sqrt(step) / d, (p2.y - p1.y) * sqrt(step) / d};
-    // MUST PASS p1 AND p2  TO POLAR
-    // FOR LOOP
-    (void)step;
-    (void)p1;
-    (void)p2;
+    printf("Go from [%f,%f] to [%f,%f]\n", p1.x, p1.y, p2.x, p2.y);
+    float   d         = dist(p1, p2);
+    int     nb_step   = (int)(d / step + 0.5);
+    point_t vect_step = {(p2.x - p1.x) * step / d, (p2.y - p1.y) * step / d};
+    for(int i = 0; i < nb_step; i++) {
+        move(xy2recheable_angles(p1));
+        p1.x += vect_step.x;
+        p1.y += vect_step.y;
+    }
 }
 
 void init_ax12(void)
@@ -99,16 +98,8 @@ void init_ax12(void)
 #endif
 }
 
-void move_to(point_t pos)
-{
-    move(pos.x, pos.y);
-}
-
 void follow_path(path_t* path, int step)
 {
-    (void)step;
-    for(int i = 0; i < path->nb_points; i++)
-        move(path->points[i].x, path->points[i].y);
-    //for(int i = 1; i < path->nb_points; i++)
-    //smart_move(path->points[i-1], path->points[i], step);
+    for(int i = 1; i < path->nb_points; i++)
+        smart_move(path->points[i - 1], path->points[i], step);
 }
