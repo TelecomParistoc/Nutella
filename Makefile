@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra -Wno-unused-function -std=c99
+CFLAGS = -Wall -Werror -Wextra -Wno-unused-function -std=c99 -O2
 LDLIBS = -lm -lAX12
 LDLIBS_DB = -lm
 SRCS = src/main.c \
@@ -32,4 +32,3 @@ db:
 clean:
 	rm -f $(OBJS)
 	rm -f $(OUT)
-

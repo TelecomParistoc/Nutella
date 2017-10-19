@@ -9,7 +9,7 @@
 #endif
 
 // Offset of the motors positions
-static float motor_offset_a;
+static point_t motor_offset;
 
 /* Return the squared distance between a point and the origin
 ** [in]  point to compute
@@ -84,23 +84,21 @@ static void resize_coordinates(path_t* path, int diameter)
     }
 }
 
-/* Return the path in angles coordinates in deg
+/* Return the angles coordinates
 ** Usable by the Nutella printer
-** [in]  path: points to compute
+** [in]  point: point to compute
+** [out] angles coordinates in rad
 */
-static void xy2angles_path(path_t* path)
+static point_t xy2ab(point_t point)
 {
     // Get coordinates as polar
-    for(int i = 0; i < path->nb_points; i++)
-        path->points[i] = xy2rt(path->points[i]);
+    point_t angles = xy2rt(point);
     // Get angles of the motors to reach each points
-    float b;
-    for(int i = 0; i < path->nb_points; i++) {
-        b                 = M_PI - 2 * acos(path->points[i].x / 2.0 / DIST_L);
-        path->points[i].x = GEAR_RATIO * (path->points[i].y + (M_PI - b) / 2);
-        path->points[i].y = b;
-    }
-    // Get center angles for a
+    float b  = M_PI - 2 * acos(angles.x / 2.0 / DIST_L);
+    angles.x = GEAR_RATIO * (angles.y + (M_PI - b) / 2);
+    angles.y = b;
+    return angles;
+    /*// Get center angles for a
     float min_a = path->points[0].x;
     float max_a = min_a;
     for(int i = 0; i < path->nb_points; i++) {
@@ -117,7 +115,35 @@ static void xy2angles_path(path_t* path)
     for(int i = 0; i < path->nb_points; i++) {
         path->points[i].x *= 180 / M_PI;
         path->points[i].y *= 180 / M_PI;
+    }*/
+}
+
+/* Get center of the path
+** Center is calculated from motor angles
+** [in]  path: points where center must be found
+** [out] center coordinates in rad
+*/
+static point_t compute_motor_center(path_t* path)
+{
+    point_t angles = xy2ab(path->points[0]);
+    float   min_a  = angles.x;
+    float   max_a  = min_a;
+    float   min_b  = angles.y;
+    float   max_b  = min_b;
+    for(int i = 0; i < path->nb_points; i++) {
+        angles = xy2ab(path->points[i]);
+        if(angles.x > max_a)
+            max_a = angles.x;
+        else if(angles.x < min_a)
+            min_a = angles.x;
+        if(angles.y > max_b)
+            max_b = angles.y;
+        else if(angles.y < min_b)
+            min_b = angles.y;
     }
+    angles.x = (min_a + max_a) / 2;
+    angles.y = (min_b + max_b) / 2;
+    return angles;
 }
 
 void compute_path(path_t* path, int diameter)
@@ -134,7 +160,13 @@ void compute_path(path_t* path, int diameter)
 #endif
     point_t c = {0, DIST_OC};
     move_path(path, &c);
-    xy2angles_path(path);
+    motor_offset = compute_motor_center(path);
+    for(int i = 0; i < path->nb_points; i++) {
+        path->points[i] = xy2ab(path->points[i]);
+        path->points[i].x -= motor_offset.x;
+        path->points[i].x *= 180 / M_PI;
+        path->points[i].y *= 180 / M_PI;
+    }
 #ifdef DEBUG
     printf("\n[DEBUG][ANGLE] path with coordinates of motors:\n");
     display_path(path);
@@ -145,7 +177,7 @@ void compute_path(path_t* path, int diameter)
 point_t center_pos(void)
 {
     point_t center = {
-        ((M_PI / 2 + acos(DIST_OC / 2.0 / DIST_L)) * GEAR_RATIO - motor_offset_a) * 180 / M_PI,
+        ((M_PI / 2 + acos(DIST_OC / 2.0 / DIST_L)) * GEAR_RATIO - motor_offset.x) * 180 / M_PI,
         (M_PI - 2 * acos(DIST_OC / 2.0 / DIST_L)) * 180 / M_PI};
     return center;
 }

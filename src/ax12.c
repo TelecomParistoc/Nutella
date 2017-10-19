@@ -78,12 +78,14 @@ static void move(float a, float b)
 static void smart_move(point_t p1, point_t p2, int step)
 {
     // MUST PASS p1 AND p2  TO CARTESIAN
-    int d = sqrt(dist2(path->points[i], path->points[i - 1]));
-    int nb_step = (int)(d * 1.0 / step - 0.5);
-    point_t vect_step = {(p2.x - p1.x) * sqrt(step) / d, (p2.y - p1.y) * sqrt(step) / d};
+    //int d = sqrt(dist2(path->points[i], path->points[i - 1]));
+    //int nb_step = (int)(d * 1.0 / step - 0.5);
+    //point_t vect_step = {(p2.x - p1.x) * sqrt(step) / d, (p2.y - p1.y) * sqrt(step) / d};
     // MUST PASS p1 AND p2  TO POLAR
     // FOR LOOP
-    move();
+    (void)step;
+    (void)p1;
+    (void)p2;
 }
 
 void init_ax12(void)
@@ -104,6 +106,9 @@ void move_to(point_t pos)
 
 void follow_path(path_t* path, int step)
 {
-    for(int i = 1; i < path->nb_points; i++)
-        smart_move(path->points[i-1], path->points[i], step);
+    (void)step;
+    for(int i = 0; i < path->nb_points; i++)
+        move(path->points[i].x, path->points[i].y);
+    //for(int i = 1; i < path->nb_points; i++)
+    //smart_move(path->points[i-1], path->points[i], step);
 }
