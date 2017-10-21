@@ -39,6 +39,7 @@ path_t parse(const char* filename)
     int posY = 0;
     // 0: read x, 1: read y
     int      mode   = 0;
+    int      minus = 1;
     int      line   = get_nb_lines(file);
     point_t* points = malloc(sizeof(point_t) * line);
     path_t   path   = {line, points};
@@ -49,9 +50,9 @@ path_t parse(const char* filename)
     while((c = fgetc(file)) != EOF) {
         if(isFigure(c)) {
             if(mode)
-                posY = posY * 10 + c - '0';
+                posY = posY * 10 + (c - '0') * minus;
             else
-                posX = posX * 10 + c - '0';
+                posX = posX * 10 + (c - '0') * minus;
         } else if(c == '\n') {
             mode                = 0;
             path.points[line].x = posX;
@@ -59,8 +60,12 @@ path_t parse(const char* filename)
             line++;
             posX = 0;
             posY = 0;
+            minus = 1;
         } else if(c == ' ') {
             mode = 1;
+            minus = 1;
+        } else if (c == '-') {
+            minus = -1;
         } else {
             printf("[ERROR][PARSING] Unexpected character line %d: %c (%x)\n", line, c, c);
             exit(-1);

@@ -62,6 +62,7 @@ static void resize_coordinates(path_t* path, int diameter)
         c.x += path->points[i].x;
         c.y += path->points[i].y;
     }
+    printf("[%f,%f]\n", c.x, c.y);
     c.x /= -path->nb_points;
     c.y /= -path->nb_points;
 #ifdef DEBUG
