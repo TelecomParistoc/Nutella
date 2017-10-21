@@ -20,8 +20,7 @@ void move(point_t angles);
 /* Follow a path with the AX12s
 ** Between two points, linear interpolation is done to make the path smoother
 ** [in]  path: path to follow
-** [in]  step: linear interpolation step
 */
-void follow_path(path_t * path, int step);
+void follow_path(path_t * path);
 
 #endif // _AX12_H_

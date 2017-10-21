@@ -72,14 +72,13 @@ void move(point_t angles)
 /* Move from a point to another using linear interpolation
 ** [in]  p1: start point
 ** [in]  p2: end point
-** [in]  step: step in mm between two points
 */
-static void smart_move(point_t p1, point_t p2, int step)
+static void smart_move(point_t p1, point_t p2)
 {
     printf("Go from [%f,%f] to [%f,%f]\n", p1.x, p1.y, p2.x, p2.y);
     float   d         = dist(p1, p2);
-    int     nb_step   = (int)(d / step + 0.5);
-    point_t vect_step = {(p2.x - p1.x) * step / d, (p2.y - p1.y) * step / d};
+    int     nb_step   = (int)(d / PATH_DIST + 0.5);
+    point_t vect_step = {(p2.x - p1.x) * PATH_DIST / d, (p2.y - p1.y) * PATH_DIST / d};
     for(int i = 0; i < nb_step; i++) {
         move(xy2recheable_angles(p1));
         p1.x += vect_step.x;
@@ -98,8 +97,8 @@ void init_ax12(void)
 #endif
 }
 
-void follow_path(path_t* path, int step)
+void follow_path(path_t* path)
 {
     for(int i = 1; i < path->nb_points; i++)
-        smart_move(path->points[i - 1], path->points[i], step);
+        smart_move(path->points[i - 1], path->points[i]);
 }
