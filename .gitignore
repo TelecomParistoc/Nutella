@@ -1,2 +1,5 @@
 *.o
 nutella
+*.pro
+*.user
+gui/build*
