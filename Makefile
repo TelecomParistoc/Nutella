@@ -22,7 +22,6 @@ format: $(SRCS:%.c=%.format)
 	mv $@ $^
 
 $(OUT): $(OBJS)
-	make format
 	$(CC) $(CFLAGS) $(DB) -o $@ $^ $(LDLIBS)
 
 db:

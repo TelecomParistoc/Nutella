@@ -8,8 +8,8 @@
 #include "AX12/ax12.h"
 #endif
 
-static int lock_1 = 1;
-static int lock_2 = 1;
+static volatile int lock_1 = 1;
+static volatile int lock_2 = 1;
 
 /* First AX12 Move callback
 */
