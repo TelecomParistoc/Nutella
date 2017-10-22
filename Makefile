@@ -10,7 +10,7 @@ SRCS = src/main.c \
 OBJS = $(SRCS:%.c=%.o)
 OUT = nutella
 
-.PHONY: clean run db format
+.PHONY: clean run db format gui
 
 run: $(OUT)
 	./$< star5.txt 320
@@ -27,6 +27,9 @@ $(OUT): $(OBJS)
 db:
 	make $(OUT) CFLAGS="$(CFLAGS) -D DEBUG=1" LDLIBS="-lm"
 	./$(OUT) star5.txt 320
+
+gui:
+	gui/build-nutella_draw-Desktop-Debug/nutella_draw
 
 clean:
 	rm -f $(OBJS)
