@@ -1,6 +1,8 @@
 #include "pump.h"
 #include <stdio.h>
-#include "wiringPi.h"
+#ifndef DEBUG
+#include <wiringPi.h>
+#endif
 #include "conf.h"
 
 int init_pump(void)
@@ -11,22 +13,22 @@ int init_pump(void)
         return 1;
     }
     pinMode(PUMP_PIN, OUTPUT);
-    return 0;
 #endif
+    return 0;
 }
 
 void start_pump(void)
 {
-#ifndef DEBUG
     printf("[INFO] Start Pump\n");
+#ifndef DEBUG
     digitalWrite(PUMP_PIN, 1);
 #endif
 }
 
 void stop_pump(void)
 {
-#ifndef DEBUG
     printf("[INFO] Stop Pump\n");
+#ifndef DEBUG
     digitalWrite(PUMP_PIN, 0);
 #endif
 }

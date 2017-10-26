@@ -16,4 +16,8 @@ typedef struct {
 */
 void display_path(path_t * path);
 
+/* Find when stopping pump in mm from the beginning
+*/
+int find_when_stop_pump(path_t * path);
+
 #endif // _PATH_H_

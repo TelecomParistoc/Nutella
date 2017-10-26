@@ -12,6 +12,7 @@
 
 static volatile int lock_1 = 1;
 static volatile int lock_2 = 1;
+static int dist_before_stop_pump;
 
 /* First AX12 Move callback
 */
@@ -51,7 +52,7 @@ void move(point_t angles)
     float a = angles.x - AX12_OFFSET_A;
     float b = angles.y - AX12_OFFSET_B;
 #ifdef DEBUG
-    printf("[INFO][MOVE] Go to [%f, %f]\n", a, b);
+    //printf("[INFO][MOVE] Go to [%f, %f]\n", a, b);
 #endif
     if(a > AX12_MAX_A || a < AX12_MIN_A) {
         printf("[ERROR][MOVE] AX12 1, Unreachable value: %f\n", a);
@@ -117,9 +118,14 @@ void init_ax12(void)
 
 void follow_path(path_t* path)
 {
+    int dist_from_beginning = 0;
+    dist_before_stop_pump = find_when_stop_pump(path);
     move(xy2recheable_angles(path->points[0]));
     wait_nutella();
-    for(int i = 1; i < path->nb_points; i++)
+    for(int i = 1; i < path->nb_points; i++) {
+        dist_from_beginning += dist(path->points[i - 1], path->points[i]);
+        if(i != 1 && dist_from_beginning > dist_before_stop_pump)
+            stop_pump();
         smart_move(path->points[i - 1], path->points[i]);
+    }
 }
-

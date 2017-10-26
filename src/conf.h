@@ -37,12 +37,14 @@
 
 
 /***********************************
-*************** PATH ***************
+*************** PUMP ***************
 ***********************************/
 
 // Pin where pump is connected
 // According to "gpio readall" tab
 #define PUMP_PIN       28
+// Distance to the end where stop pump in mm
+#define PUMP_STOP_DIST 200
 
 /***********************************
 *************** PATH ***************
