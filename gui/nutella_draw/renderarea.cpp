@@ -50,7 +50,10 @@ void RenderArea::mouseMoveEvent(QMouseEvent * event)
 
 void RenderArea::save()
 {
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save File"), "/home/blacksocks/Documents/robotics/Nutella/");
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save File"), "/home/blacksocks/Documents/robotics/Nutella/", tr("Text (*.txt)"));
+    // Add ".txt" extension if there is another extension
+    if(filename.right(4).compare(".txt") != 0)
+        filename.append(".txt");
     QFile f(filename);
     if(!f.open(QIODevice::WriteOnly)) {
         printf("An error occured during saving\n");
