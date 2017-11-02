@@ -6,13 +6,13 @@
 #include "path.h"
 #include "pump.h"
 #ifndef DEBUG
-    #include "AX12/ax12.h"
-    #include <wiringPi.h>
+#include <wiringPi.h>
+#include "AX12/ax12.h"
 #endif
 
 static volatile int lock_1 = 1;
 static volatile int lock_2 = 1;
-static int dist_before_stop_pump;
+static int          dist_before_stop_pump;
 
 /* First AX12 Move callback
 */
@@ -63,15 +63,15 @@ void move(point_t angles)
         return;
     }
 #ifndef DEBUG
-    lock_1 = 1;
-    lock_2 = 1;
+    lock_1  = 1;
+    lock_2  = 1;
     int err = 1;
     for(int i = 0; i < AX12_NB_TRY && err != 0; i++)
-    	err = AX12move(AX12_ID_1, a, move_callback_1);
+        err = AX12move(AX12_ID_1, a, move_callback_1);
     handle_error(AX12_ID_1, err);
     err = 1;
     for(int i = 0; i < AX12_NB_TRY && err != 0; i++)
-    	err = AX12move(AX12_ID_2, b, move_callback_2);
+        err = AX12move(AX12_ID_2, b, move_callback_2);
     handle_error(AX12_ID_2, err);
     //while(lock_1 || lock_2);
 #endif
@@ -119,7 +119,7 @@ void init_ax12(void)
 void follow_path(path_t* path)
 {
     int dist_from_beginning = 0;
-    dist_before_stop_pump = find_when_stop_pump(path);
+    dist_before_stop_pump   = find_when_stop_pump(path);
     move(xy2recheable_angles(path->points[0]));
     wait_nutella();
     for(int i = 1; i < path->nb_points; i++) {

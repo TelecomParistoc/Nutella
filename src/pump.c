@@ -8,7 +8,7 @@
 int init_pump(void)
 {
 #ifndef DEBUG
-    if (wiringPiSetup() == -1) {
+    if(wiringPiSetup() == -1) {
         printf("[ERROR][WIRINGPI] An error occured during Wiring Pi setup\n");
         return 1;
     }

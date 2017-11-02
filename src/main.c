@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
     }
     // Init
     init_ax12();
-    if (init_pump())
+    if(init_pump())
         return 1;
     // Extract cooridnates from the input file
     path_t path     = parse(argv[1]);
@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
     printf("The printing head must be at the 'crepe' center\n");
     printf("Press Any Key to Continue\n");
     getchar();
-    
+
     follow_path(&path);
     stop_pump();
 
