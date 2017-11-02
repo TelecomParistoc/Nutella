@@ -15,7 +15,7 @@ IN_FILE = star5.txt
 .PHONY: clean run db format stop gui
 
 run: $(OUT)
-	./$< $(IN_FILE) 320
+	./$< $(IN_FILE) 300
 
 format: $(SRCS:%.c=%.format)
 

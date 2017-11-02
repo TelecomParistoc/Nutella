@@ -6,7 +6,7 @@
 ***********************************/
 
 // Distance between origin and 'crepe' center
-#define DIST_OC         260
+#define DIST_OC         270
 // Distance of the arm
 #define DIST_L          220
 // Gear ratio
