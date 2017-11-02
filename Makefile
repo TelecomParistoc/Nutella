@@ -27,8 +27,7 @@ $(OUT): $(OBJS)
 	$(CC) $(CFLAGS) $(DB) -o $@ $^ $(LDLIBS)
 
 db:
-	make $(OUT) CFLAGS="$(CFLAGS) -D DEBUG=1" LDLIBS="$(LDLIBS_DB)"
-	make run
+	make run CFLAGS="$(CFLAGS) -D DEBUG=1" LDLIBS="$(LDLIBS_DB)"
 
 stop_pump: $(OBJS:src/main.o=) src/stop_pump.o
 	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
